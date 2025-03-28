@@ -46,7 +46,7 @@ resource "proxmox_virtual_environment_vm" "proxmox" {
 
   cdrom {
     enabled = true
-    file_id = "local:iso/preseeded_debian.iso"
+    file_id = "local:iso/debian_.iso"
   }
 }
 
