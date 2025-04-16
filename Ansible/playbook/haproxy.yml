@@ -1,0 +1,21 @@
+- name: Installer Haproxy
+  hosts: front_dev
+  become: true
+
+- name: Installer HAProxy
+  apt:
+    name: haproxy
+    state: present
+    update_cache: yes
+
+- name: Copier le fichier de configuration HAProxy
+  copy:
+    src: files/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    backup: yes
+
+- name: Démarrer et activer HAProxy
+  service:
+    name: haproxy
+    state: started
+    enabled: yes

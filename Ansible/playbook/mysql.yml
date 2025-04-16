@@ -1,0 +1,42 @@
+- name: Installer Haproxy
+  hosts: back_dev
+  become: true
+
+- name: Preseed le mot de passe root
+  debconf:
+    name: mysql-server
+    question: 'mysql-server/root_password'
+    value: "{{ mysql_root_password }}"
+    vtype: 'password'
+
+- name: Confirmer le mot de passe root
+  debconf:
+    name: mysql-server
+    question: 'mysql-server/root_password_again'
+    value: "{{ mysql_root_password }}"
+    vtype: 'password'
+
+- name: Installer MySQL Server
+  apt:
+    name: mysql-server
+    state: present
+    update_cache: yes
+
+- name: S'assurer que MySQL est démarré
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Créer la base de données WordPress
+  mysql_db:
+    name: "{{ wp_db_name }}"
+    state: present
+
+- name: Créer un utilisateur WordPress
+  mysql_user:
+    name: "{{ wp_db_user }}"
+    password: "{{ wp_db_password }}"
+    priv: "{{ wp_db_name }}.*:ALL"
+    host: "%"
+    state: present

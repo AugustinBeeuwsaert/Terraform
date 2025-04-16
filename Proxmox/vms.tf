@@ -1,8 +1,8 @@
 resource "proxmox_virtual_environment_vm" "proxmox" {
-  name        = "front"
+  name        = "Back"
   node_name   = "proxmox1"  
   description = "VM créée avec Terraform"   
-  vm_id       = 110  
+  vm_id       = 130  
 
   startup {
     order      = "3"
@@ -11,16 +11,16 @@ resource "proxmox_virtual_environment_vm" "proxmox" {
   }
 
   cpu {
-    cores = 2
+    cores = 1
   }
 
   memory {
-    dedicated = 2048  
+    dedicated = 1024  
   }
 
   disk {
     datastore_id = "local-lvm"
-    size         = 8     
+    size         = 5     
     interface    = "scsi0"  
     file_format  = "raw"   
   }
@@ -46,7 +46,7 @@ resource "proxmox_virtual_environment_vm" "proxmox" {
 
   cdrom {
     enabled = true
-    file_id = "local:iso/debian_.iso"
+    file_id = "local:iso/debian12-auto.iso"
   }
 }
 
