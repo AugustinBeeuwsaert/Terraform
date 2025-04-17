@@ -1,21 +1,29 @@
-- name: Installer Haproxy
+---
+- name: Installer et configurer HAProxy sur le serveur front
   hosts: front_dev
   become: true
 
-- name: Installer HAProxy
-  apt:
-    name: haproxy
-    state: present
-    update_cache: yes
+  tasks:
+    - name: Installer HAProxy
+      apt:
+        name: haproxy
+        state: present
+        update_cache: yes
 
-- name: Copier le fichier de configuration HAProxy
-  copy:
-    src: files/haproxy.cfg
-    dest: /etc/haproxy/haproxy.cfg
-    backup: yes
+    - name: Activer HAProxy au démarrage
+      lineinfile:
+        path: /etc/default/haproxy
+        regexp: '^ENABLED='
+        line: 'ENABLED=1'
 
-- name: Démarrer et activer HAProxy
-  service:
-    name: haproxy
-    state: started
-    enabled: yes
+    - name: Déployer la configuration HAProxy
+      copy:
+        src: files/haproxy.cfg
+        dest: /etc/haproxy/haproxy.cfg
+        
+        
+    - name: Redémarrer HAProxy
+      service:
+        name: haproxy
+        state: restarted
+        enabled: true
